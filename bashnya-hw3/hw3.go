@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Stack struct {
 	Data []int
@@ -170,6 +173,19 @@ func findSuccessor(node *Node) *Node {
 	return node
 }
 
+func (n *BST) Print() {
+	printTree(n.Root, 0)
+}
+
+func printTree(node *Node, level int) {
+	if node == nil {
+		return
+	}
+	printTree(node.Right, level+1)
+	fmt.Printf("%s%d\n", strings.Repeat("    ", level), node.Value)
+	printTree(node.Left, level+1)
+}
+
 func main() {
 	var check string
 	fmt.Printf("If you want to test BST, enter b, else, enter s: ")
@@ -242,6 +258,8 @@ func main() {
 			b.Insert(temp)
 		}
 
+		b.Print()
+
 		fmt.Printf("Input a number to check it in tree : ")
 		fmt.Scan(&n)
 		fmt.Printf("Is %d in tree? %t\n", n, b.Find(n))
@@ -257,6 +275,8 @@ func main() {
 		b.Remove(n)
 
 		fmt.Println("Lets check the depth again - ", b.Depth())
+
+		b.Print()
 	}
 
 }
