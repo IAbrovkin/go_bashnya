@@ -6,190 +6,190 @@ import (
 
 func TestCreateKey(t *testing.T) {
 	testTable := []struct {
-		string_in  string
-		conf       Config
-		string_out string
+		stringIn  string
+		conf      Config
+		stringOut string
 	}{
 		{
-			string_in:  "Here we go Again",
-			conf:       Config{IgnoreRegister: true},
-			string_out: "here we go again",
+			stringIn:  "Here we go Again",
+			conf:      Config{IgnoreRegister: true},
+			stringOut: "here we go again",
 		},
 		{
-			string_in:  "Here we go Again",
-			conf:       Config{IgnoreRegister: true, SkipFields: 1},
-			string_out: "we go again",
+			stringIn:  "Here we go Again",
+			conf:      Config{IgnoreRegister: true, SkipFields: 1},
+			stringOut: "we go again",
 		},
 		{
-			string_in:  "Here we go Again",
-			conf:       Config{IgnoreRegister: true, SkipFields: 5},
-			string_out: "here we go again",
+			stringIn:  "Here we go Again",
+			conf:      Config{IgnoreRegister: true, SkipFields: 5},
+			stringOut: "here we go again",
 		},
 		{
-			string_in:  "Here we go Again",
-			conf:       Config{IgnoreRegister: true, SkipFields: 1, SkipChars: 1},
-			string_out: "e go again",
+			stringIn:  "Here we go Again",
+			conf:      Config{IgnoreRegister: true, SkipFields: 1, SkipChars: 1},
+			stringOut: "e go again",
 		},
 		{
-			string_in:  "Here we go Again",
-			conf:       Config{IgnoreRegister: true, SkipFields: 3, SkipChars: 3},
-			string_out: "in",
+			stringIn:  "Here we go Again",
+			conf:      Config{IgnoreRegister: true, SkipFields: 3, SkipChars: 3},
+			stringOut: "in",
 		},
 		{
-			string_in:  "",
-			conf:       Config{SkipFields: 1},
-			string_out: "",
+			stringIn:  "",
+			conf:      Config{SkipFields: 1},
+			stringOut: "",
 		},
 		{
-			string_in:  "   here           we   ",
-			conf:       Config{SkipFields: 1},
-			string_out: "we",
+			stringIn:  "   here           we   ",
+			conf:      Config{SkipFields: 1},
+			stringOut: "we",
 		},
 		{
-			string_in:  "   here       we   ",
-			conf:       Config{SkipFields: 1, SkipChars: 12},
-			string_out: "we",
+			stringIn:  "   here       we   ",
+			conf:      Config{SkipFields: 1, SkipChars: 12},
+			stringOut: "we",
 		},
 		{
-			string_in:  "Hello WORLD",
-			conf:       Config{SkipFields: 1},
-			string_out: "WORLD",
+			stringIn:  "Hello WORLD",
+			conf:      Config{SkipFields: 1},
+			stringOut: "WORLD",
 		},
 	}
 	for _, testCase := range testTable {
-		result := createKey(testCase.string_in, testCase.conf)
+		result := createKey(testCase.stringIn, testCase.conf)
 
-		t.Logf("Calling CreateKey(%s,%v), result %s", testCase.string_in, testCase.conf, result)
+		t.Logf("Calling CreateKey(%s,%v), result %s", testCase.stringIn, testCase.conf, result)
 
-		if result != testCase.string_out {
-			t.Errorf("Incorrect result. Expect %s, got %s", testCase.string_out, result)
+		if result != testCase.stringOut {
+			t.Errorf("Incorrect result. Expect %s, got %s", testCase.stringOut, result)
 		}
 	}
 }
 
 func TestProcessLines(t *testing.T) {
 	testTable := []struct {
-		strings_in  []string
-		conf        Config
-		strings_out []string
+		stringsIn  []string
+		conf       Config
+		stringsOut []string
 	}{
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"apple",
 				"banana",
 				"apple",
 				"cherry",
 			},
 			conf: Config{},
-			strings_out: []string{
+			stringsOut: []string{
 				"apple\n",
 				"banana\n",
 				"cherry\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"apple",
 				"banana",
 				"apple",
 				"cherry",
 			},
 			conf: Config{Count: true},
-			strings_out: []string{
+			stringsOut: []string{
 				"2 apple\n",
 				"1 banana\n",
 				"1 cherry\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"apple",
 				"banana",
 				"apple",
 				"cherry",
 			},
 			conf: Config{Repeat: true},
-			strings_out: []string{
+			stringsOut: []string{
 				"apple\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"apple",
 				"banana",
 				"apple",
 				"cherry",
 			},
 			conf: Config{Uniq: true},
-			strings_out: []string{
+			stringsOut: []string{
 				"banana\n",
 				"cherry\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"APPLE",
 				"apple",
 				"Banana",
 				"BANANA",
 			},
 			conf: Config{IgnoreRegister: true},
-			strings_out: []string{
+			stringsOut: []string{
 				"APPLE\n",
 				"Banana\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"We love music",
 				"I love music",
 				"They love music",
 			},
 			conf: Config{SkipFields: 1},
-			strings_out: []string{
+			stringsOut: []string{
 				"We love music\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"Apple",
 				"Bpple",
 				"Cpple",
 			},
 			conf: Config{SkipChars: 1},
-			strings_out: []string{
+			stringsOut: []string{
 				"Apple\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"We LOVE music",
 				"I love MUSIC",
 				"They Love music",
 			},
 			conf: Config{IgnoreRegister: true, SkipFields: 1},
-			strings_out: []string{
+			stringsOut: []string{
 				"We LOVE music\n",
 			},
 		},
 		{
-			strings_in:  []string{},
-			conf:        Config{},
-			strings_out: []string{},
+			stringsIn:  []string{},
+			conf:       Config{},
+			stringsOut: []string{},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"same",
 				"same",
 				"same",
 			},
 			conf: Config{},
-			strings_out: []string{
+			stringsOut: []string{
 				"same\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"APPLE",
 				"apple",
 				"BANANA",
@@ -197,39 +197,39 @@ func TestProcessLines(t *testing.T) {
 				"Apple",
 			},
 			conf: Config{Count: true, IgnoreRegister: true},
-			strings_out: []string{
+			stringsOut: []string{
 				"3 APPLE\n",
 				"2 BANANA\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"short",
 				"a b",
 				"only one",
 			},
 			conf: Config{SkipFields: 5},
-			strings_out: []string{
+			stringsOut: []string{
 				"short\n",
 				"a b\n",
 				"only one\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"a",
 				"bc",
 				"def",
 			},
 			conf: Config{SkipChars: 10},
-			strings_out: []string{
+			stringsOut: []string{
 				"a\n",
 				"bc\n",
 				"def\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"third",
 				"first",
 				"second",
@@ -237,19 +237,19 @@ func TestProcessLines(t *testing.T) {
 				"third",
 			},
 			conf: Config{},
-			strings_out: []string{
+			stringsOut: []string{
 				"third\n",
 				"first\n",
 				"second\n",
 			},
 		},
 		{
-			strings_in: []string{
+			stringsIn: []string{
 				"hello world",
 				"test",
 			},
 			conf: Config{SkipFields: 3, SkipChars: 10},
-			strings_out: []string{
+			stringsOut: []string{
 				"hello world\n",
 				"test\n",
 			},
@@ -258,11 +258,11 @@ func TestProcessLines(t *testing.T) {
 
 	for _, tc := range testTable {
 
-		result := processLines(tc.strings_in, tc.conf)
-		t.Logf("Calling CreateKey(%s,%v), result %s", tc.strings_in, tc.conf, result)
+		result := processLines(tc.stringsIn, tc.conf)
+		t.Logf("Calling CreateKey(%s,%v), result %s", tc.stringsIn, tc.conf, result)
 		for i := range result {
-			if result[i] != tc.strings_out[i] {
-				t.Errorf("Line %d: expected '%s', got '%s'", i, tc.strings_out[i], result[i])
+			if result[i] != tc.stringsOut[i] {
+				t.Errorf("Line %d: expected '%s', got '%s'", i, tc.stringsOut[i], result[i])
 			}
 		}
 	}

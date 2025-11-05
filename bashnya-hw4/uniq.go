@@ -98,19 +98,24 @@ func processLines(lines []string, conf Config) []string {
 	return result
 }
 
-func main() {
-	flag.Parse()
-
-	if (*cFlag && *dFlag) || (*cFlag && *uFlag) || (*uFlag && *dFlag) {
-		fmt.Fprintln(os.Stderr, "Error. You cannot use -c,-d,-u flags together")
-		os.Exit(1)
+func writeOutput(result []string, outputFile string) error {
+	if outputFile != "" {
+		file, err := os.Create(outputFile)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		for _, line := range result {
+			fmt.Fprint(file, line)
+		}
+	} else {
+		fmt.Print(strings.Join(result, ""))
 	}
+	return nil
+}
 
-	remainingArgs := flag.Args()
-
-	var reader io.Reader
-
-	config := Config{
+func createConfig() Config {
+	return Config{
 		Count:          *cFlag,
 		Repeat:         *dFlag,
 		Uniq:           *uFlag,
@@ -118,7 +123,17 @@ func main() {
 		SkipFields:     *fFlag,
 		SkipChars:      *sFlag,
 	}
+}
 
+func main() {
+	flag.Parse()
+	if (*cFlag && *dFlag) || (*cFlag && *uFlag) || (*uFlag && *dFlag) {
+		fmt.Fprintln(os.Stderr, "Error. You cannot use -c,-d,-u flags together")
+		os.Exit(1)
+	}
+	remainingArgs := flag.Args()
+	var reader io.Reader
+	config := createConfig()
 	if len(remainingArgs) > 0 {
 		file, err := os.Open(remainingArgs[0])
 		if err != nil {
@@ -130,26 +145,17 @@ func main() {
 	} else {
 		reader = os.Stdin
 	}
-
 	s, err := readLines(reader)
 	if err != nil {
 		fmt.Printf("Error reading file : %s", err)
 		return
 	}
-
 	res := processLines(s, config)
+	outputFile := ""
 	if len(remainingArgs) == 2 {
-		file, err := os.Create(remainingArgs[1])
-		if err != nil {
-			fmt.Printf("Error creating file : %v", err)
-			return
-		}
-		defer file.Close()
-		for _, line := range res {
-			fmt.Fprint(file, line)
-		}
-
-	} else {
-		fmt.Println(strings.Join(res, ""))
+		outputFile = remainingArgs[1]
+	}
+	if err := writeOutput(res, outputFile); err != nil {
+		fmt.Printf("Error writing output: %v", err)
 	}
 }
