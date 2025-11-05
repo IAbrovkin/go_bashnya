@@ -21,13 +21,16 @@ jobs:
 
     - name: Build
       run: go build -v -o ./uniq
+      working-directory: ./bashnya-hw4
         
     - name: Lint
       run: golangci-lint run -v -c ./.golangci-lint.yml ./...
+      working-directory: ./bashnya-hw4
         
     - name: Unit tests
       run: go test -v ./...
+      working-directory: ./bashnya-hw4
 
     - name: Acceptance tests
-      run: ./acceptance-tests/tests.sh 
-
+      run: ./acceptance-tests/tests.sh
+      working-directory: ./bashnya-hw4
