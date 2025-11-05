@@ -34,5 +34,6 @@ jobs:
     - name: Acceptance tests
       run: |
         chmod +x ./acceptance-tests/tests.sh
+        mkdir -p ./acceptance-tests/user
         ./acceptance-tests/tests.sh
       working-directory: ./bashnya-hw4
