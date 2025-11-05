@@ -32,5 +32,7 @@ jobs:
       working-directory: ./bashnya-hw4
 
     - name: Acceptance tests
-      run: ./acceptance-tests/tests.sh
+      run: |
+        chmod +x ./acceptance-tests/tests.sh
+        ./acceptance-tests/tests.sh
       working-directory: ./bashnya-hw4
